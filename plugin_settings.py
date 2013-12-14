@@ -15,3 +15,10 @@ class Greetings:
 
 class Logger:
     output = path.join(dirname, "plugin_data/logs.txt")
+
+
+class Confusion:
+    expressions = ["huh?", "what?", "eh?", "pardon?", "come again?",
+                   "sorry, what?", "excuse me?", "I beg your pardon?",
+                   "could you run that by me again?", "you what?",
+                   "What did you just call me?"]

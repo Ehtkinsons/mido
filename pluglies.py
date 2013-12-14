@@ -22,6 +22,13 @@ class Base:
     def execute(self, *args, **kwargs):
         pass
 
+    def respond(self, bot, channel, msg):
+        if hasattr(bot, 'responded') and bot.responded:
+            return
+        bot.responded = True
+        if msg:
+            bot.msg(channel, msg)
+
     def run(self, bot, user, channel, msg):
         if channel == bot.nickname:
             channel = user
@@ -30,8 +37,8 @@ class Base:
 
         parameters = self.match(msg)
         if isinstance(parameters, list):
-            self.say = lambda s: bot.msg(channel, s) if s else None
-            self.pm = lambda s: bot.msg(user, s) if s else None
+            self.say = lambda s: self.respond(bot, channel, s)
+            self.pm = lambda s: self.respond(bot, user, s)
             self.execute(*parameters)
 
 
@@ -97,7 +104,7 @@ class Translate(Base):
             self.say("I don't know that.")
 
 
-class Greetings:
+class Greetings(Base):
     def match(self, bot, msg):
         msg = msg.lower()
         msg = ''.join([c if c in ascii_letters else ' ' for c in msg])
@@ -130,5 +137,15 @@ class Greetings:
 
         word = self.match(bot, msg)
         if word:
-            self.say = lambda s: bot.msg(channel, s) if s else None
+            self.say = lambda s: self.respond(bot, channel, s)
             self.execute(user, word)
+
+
+class Confusion(Base):
+    regex = r'%s\W+' % NICKNAME
+
+    def execute(self):
+        response = choice(pls.Confusion.expressions)
+        if choice([True, False]):
+            response = response[0].upper() + response[1:]
+        self.say(response)

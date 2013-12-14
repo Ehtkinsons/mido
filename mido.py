@@ -28,6 +28,7 @@ class Mido(irc.IRCClient):
         except ValueError:
             pass
 
+        self.responded = False
         for p in pluglies:
             try:
                 p.run(self, user, channel, msg)
