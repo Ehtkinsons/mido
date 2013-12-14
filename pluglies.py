@@ -51,10 +51,12 @@ class Translate(Base):
 
     def execute(self, phrase):
         defns = (Sense.objects.filter(association__expression__text=phrase)
+                              .distinct()
                               .order_by("sense_id")
                               .values_list('text', flat=True))
         if not defns:
             defns = (Sense.objects.filter(association__reading__text=phrase)
+                                  .distinct()
                                   .order_by("sense_id")
                                   .values_list('text', flat=True))
         if defns:
@@ -72,7 +74,9 @@ class Translate(Base):
 
                     s = ""
                     for i, texts in out.items():
-                        s = ' '.join([s, "%s." % i, '; '.join(texts)])
+                        s = ' '.join([s,
+                                      "%s." % i if texts else '',
+                                      '; '.join(texts)])
 
                     if len(s) <= CHARACTER_LIMIT / 2:
                         best_s = str(s.strip())
