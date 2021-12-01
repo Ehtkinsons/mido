@@ -22,3 +22,5 @@ class Confusion:
                    "mmmm?", "excuse me?", "beg pardon?",
                    "hm?", "you what?",
                    "what did you just call me?"]
+
+class DailyDemon
